@@ -16,12 +16,14 @@ public class DataConnection {
 			System.out.println("Driver is OK!!");
 		} catch (ClassNotFoundException e) {
 			System.err.println("Driver is Error....");
+			// e.printStackTrace();
 		}
 		try {
 			conn = DriverManager.getConnection(url, username, password);
 			System.out.println("Connection is OK!!");
 		} catch (SQLException e) {
 			System.err.println("Connection is Error....");
+			// e.printStackTrace();
 		}
 		return conn;
 	}

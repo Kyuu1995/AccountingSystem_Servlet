@@ -1,5 +1,6 @@
-
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,8 +18,11 @@ public class DoSelect_Servlet extends HttpServlet {
 		String table = request.getParameter("table");
 		DataControl dc = new DataControl(table);
 		DataBase db = new DataBase();
-		db.select(dc);
-		System.out.println(dc.getTable());
+		List<DataControl> data = db.select(dc);
+		for (int i = 0; i < data.size(); i++) {
+			System.out.println(
+					data.get(i).getDate() + data.get(i).getItem() + data.get(i).getAmount() + data.get(i).getNotes());
+		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

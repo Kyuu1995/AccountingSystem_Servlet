@@ -6,35 +6,34 @@ public class DataBase {
 
 	// ---- Create ----
 	public void create(DataControl dc) {
+		String sql = "insert into " + dc.getTable() + " (date, item_no, amount, notes) values (?, ?, ?, ?)";
 		try {
-			String sql = "insert into ? (date, item_no, amount, notes) values (?, ?, ?, ?)";
 			PreparedStatement ps = DataConnection.getConnection().prepareStatement(sql);
-			ps.setString(1, dc.getTable());
-			ps.setString(2, dc.getDate());
-			ps.setString(3, dc.getItem());
-			ps.setInt(4, dc.getAmount());
-			ps.setString(5, dc.getNotes());
+			ps.setString(1, dc.getDate());
+			ps.setString(2, dc.getItem());
+			ps.setInt(3, dc.getAmount());
+			ps.setString(4, dc.getNotes());
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			err.println("Create Error....");
+			// e.printStackTrace();
 		}
 	}
 
 	// ---- Select ----
 	public List<DataControl> select(DataControl dc) {
+		String sql = "select * from " + dc.getTable();
 		ArrayList<DataControl> allData = new ArrayList<DataControl>();
 		try {
-			String sql = "select * from ?";
-			PreparedStatement ps = DataConnection.getConnection().prepareStatement(sql);
-			ps.setString(1, dc.getTable());
-			ResultSet rs = ps.executeQuery();
+			Statement st = DataConnection.getConnection().createStatement();
+			ResultSet rs = st.executeQuery(sql);
 			while (rs.next()) {
 				DataControl data = toData(rs);
 				allData.add(data);
 			}
-			System.out.print(allData);
 		} catch (SQLException e) {
-			err.println("Select Error...." + dc.getTable());
+			err.println("Select Error....");
+			// e.printStackTrace();
 		}
 		return allData;
 	}
@@ -49,8 +48,4 @@ public class DataBase {
 		return data;
 	}
 
-	public Connection conn() {
-		return null;
-
-	}
 }
