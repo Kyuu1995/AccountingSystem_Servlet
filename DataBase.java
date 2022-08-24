@@ -6,9 +6,9 @@ public class DataBase {
 
 	// ---- Create ----
 	public void create(DataControl dc) {
-		String sql = "insert into " + dc.getTable() + " (date, item_no, amount, notes) values (?, ?, ?, ?)";
+		String create = "insert into " + dc.getTable() + " (date, item_no, amount, notes) values (?, ?, ?, ?)";
 		try {
-			PreparedStatement ps = DataConnection.getConnection().prepareStatement(sql);
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(create);
 			ps.setString(1, dc.getDate());
 			ps.setString(2, dc.getItem());
 			ps.setInt(3, dc.getAmount());
@@ -20,13 +20,43 @@ public class DataBase {
 		}
 	}
 
+	// ---- Update ----
+	public void update(DataControl dc, DataControl dcNew) {
+		try {
+			String select = "select " + dc.getTable() + "_no from " + dc.getTable()
+					+ " where date = ?, item_no = ?, amount = ?, notes = ?";
+			PreparedStatement pst = DataConnection.getConnection().prepareStatement(select);
+			pst.setString(1, dc.getDate());
+			pst.setString(2, dc.getItem());
+			pst.setInt(3, dc.getAmount());
+			pst.setString(4, dc.getNotes());
+			ResultSet rs = pst.executeQuery();
+			try {
+				String update = "update " + dc.getTable() + " set date = ?, item_no = ?, amount = ?, notes = ? where "
+						+ dc.getTable() + "_no = ?";
+				PreparedStatement ps = DataConnection.getConnection().prepareStatement(update);
+				ps.setString(1, dc.getDate());
+				ps.setString(2, dc.getItem());
+				ps.setInt(3, dc.getAmount());
+				ps.setString(4, dc.getNotes());
+				ps.setString(5, rs.getString(1));
+			} catch (Exception e) {
+				err.println("Update Error....");
+				// e.printStackTrace();
+			}
+		} catch (SQLException e) {
+			err.println("UpdateSelect Error....");
+			// e.printStackTrace();
+		}
+	}
+
 	// ---- Select ----
 	public List<DataControl> select(DataControl dc) {
-		String sql = "select * from " + dc.getTable();
+		String select = "select * from " + dc.getTable();
 		ArrayList<DataControl> allData = new ArrayList<DataControl>();
 		try {
 			Statement st = DataConnection.getConnection().createStatement();
-			ResultSet rs = st.executeQuery(sql);
+			ResultSet rs = st.executeQuery(select);
 			while (rs.next()) {
 				DataControl data = toData(rs, dc);
 				allData.add(data);
