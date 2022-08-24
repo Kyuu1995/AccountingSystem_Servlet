@@ -28,7 +28,7 @@ public class DataBase {
 			Statement st = DataConnection.getConnection().createStatement();
 			ResultSet rs = st.executeQuery(sql);
 			while (rs.next()) {
-				DataControl data = toData(rs);
+				DataControl data = toData(rs, dc);
 				allData.add(data);
 			}
 		} catch (SQLException e) {
@@ -39,10 +39,15 @@ public class DataBase {
 	}
 
 	// ---- setResult ----
-	public DataControl toData(ResultSet rs) throws SQLException {
+	public DataControl toData(ResultSet rs, DataControl dc) throws SQLException {
+		String sql = "select item_income_name from item_" + dc.getTable() + " where item_income_no = ?";
+		PreparedStatement ps = DataConnection.getConnection().prepareStatement(sql);
+		ps.setString(1, rs.getString(3));
+		ResultSet result = ps.executeQuery();
+		result.next();
 		DataControl data = new DataControl();
 		data.setDate(rs.getString(2));
-		data.setItem(rs.getString(3));
+		data.setItem(result.getString(1));
 		data.setAmount(rs.getInt(4));
 		data.setNotes(rs.getString(5));
 		return data;
