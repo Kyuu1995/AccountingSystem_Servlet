@@ -6,13 +6,15 @@ public class DataBase {
 
 	// ---- Create ----
 	public void create(DataControl dc) {
-		String create = "insert into " + dc.getTable() + " (date, item_no, amount, notes) values (?, ?, ?, ?)";
+		String create = "insert into " + dc.getTable()
+				+ " (date, item_no, amount, notes,user_no) values (?, ?, ?, ? ,?)";
 		try {
 			PreparedStatement ps = DataConnection.getConnection().prepareStatement(create);
 			ps.setString(1, dc.getDate());
 			ps.setString(2, dc.getItem());
 			ps.setInt(3, dc.getAmount());
 			ps.setString(4, dc.getNotes());
+			ps.setInt(5, dc.getUser());
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			err.println("Create Error....");
@@ -52,11 +54,12 @@ public class DataBase {
 
 	// ---- Select ----
 	public List<DataControl> select(DataControl dc) {
-		String select = "select * from " + dc.getTable();
+		String select = "select * from " + dc.getTable() + " where user_no = ?";
 		ArrayList<DataControl> allData = new ArrayList<DataControl>();
 		try {
-			Statement st = DataConnection.getConnection().createStatement();
-			ResultSet rs = st.executeQuery(select);
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(select);
+			ps.setInt(1, dc.getUser());
+			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				DataControl data = toData(rs, dc);
 				allData.add(data);

@@ -14,17 +14,18 @@ public class DoUpdate_Servlet extends HttpServlet {
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
+		int user = Integer.parseInt(request.getParameter("user"));
 		String table = request.getParameter("table");
 		String date = request.getParameter("date");
 		String item = request.getParameter("item");
 		int amount = Integer.parseInt(request.getParameter("amount"));
 		String notes = request.getParameter("notes");
-		DataControl dc = new DataControl(table, date, item, amount, notes);
+		DataControl dc = new DataControl(user, table, date, item, amount, notes);
 		String dateNew = request.getParameter("dateNew");
 		String itemNew = request.getParameter("itemNew");
 		int amountNew = Integer.parseInt(request.getParameter("amountNew"));
 		String notesNew = request.getParameter("notesNew");
-		DataControl dcNew = new DataControl(table, dateNew, itemNew, amountNew, notesNew);
+		DataControl dcNew = new DataControl(user, table, dateNew, itemNew, amountNew, notesNew);
 		DataBase db = new DataBase();
 		db.update(dc, dcNew);
 	}

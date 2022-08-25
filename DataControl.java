@@ -2,6 +2,7 @@ import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public class DataControl implements Serializable {
+	private int user;
 	private String table;
 	private String date;
 	private String item;
@@ -11,16 +12,27 @@ public class DataControl implements Serializable {
 	public DataControl() {
 	};
 
-	public DataControl(String table) {
+	public DataControl(int user, String table) {
+		this.user = user;
 		this.table = table;
 	};
 
-	public DataControl(String table, String date, String item, int amount, String notes) {
+	public DataControl(int user, String table, String date, String item, int amount, String notes) {
+		this.user = user;
 		this.table = table;
 		this.date = date;
 		this.item = item;
 		this.amount = amount;
 		this.notes = notes;
+	}
+
+	// ----
+	public int getUser() {
+		return user;
+	}
+
+	public void setUser(int user) {
+		this.user = user;
 	}
 
 	// ----

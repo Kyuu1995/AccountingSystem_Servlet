@@ -15,10 +15,11 @@ public class DoSelect_Servlet extends HttpServlet {
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json;charset=UTF-8");
-		String table = request.getParameter("table");
-		DataControl dc = new DataControl(table);
-		DataBase db = new DataBase();
 		PrintWriter out = response.getWriter();
+		int user = Integer.parseInt(request.getParameter("user"));
+		String table = request.getParameter("table");
+		DataControl dc = new DataControl(user, table);
+		DataBase db = new DataBase();
 		List<DataControl> data = db.select(dc);
 		String json = "[";
 		for (int i = 0; i < data.size(); i++) {
@@ -32,7 +33,6 @@ public class DoSelect_Servlet extends HttpServlet {
 		}
 		json += "]";
 		out.print(json);
-		System.out.print(json);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
