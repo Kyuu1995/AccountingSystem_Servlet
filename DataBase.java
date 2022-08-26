@@ -54,11 +54,12 @@ public class DataBase {
 
 	// ---- Select ----
 	public List<DataControl> select(DataControl dc) {
-		String select = "select * from " + dc.getTable() + " where user_no = ?";
+		String select = "select * from " + dc.getTable() + " where user_no = ? and date like ?";
 		ArrayList<DataControl> allData = new ArrayList<DataControl>();
 		try {
 			PreparedStatement ps = DataConnection.getConnection().prepareStatement(select);
 			ps.setInt(1, dc.getUser());
+			ps.setString(2, dc.getNow() + "%");
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				DataControl data = toData(rs, dc);
@@ -66,14 +67,55 @@ public class DataBase {
 			}
 		} catch (SQLException e) {
 			err.println("Select Error....");
-			// e.printStackTrace();
+			e.printStackTrace();
 		}
 		return allData;
 	}
 
-	// ---- setResult ----
+	// ---- SelectAll ----
+	public List<DataControl> selectAll(DataControl dc) {
+		String selectAll = "select * from " + dc.getTable() + " where user_no = ?";
+		ArrayList<DataControl> allData = new ArrayList<DataControl>();
+		try {
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(selectAll);
+			ps.setInt(1, dc.getUser());
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				DataControl data = toData(rs, dc);
+				allData.add(data);
+			}
+		} catch (SQLException e) {
+			err.println("DateSelect Error....");
+			e.printStackTrace();
+		}
+		return allData;
+	}
+
+	// ---- SelectDate ----
+	public List<DataControl> selectDate(DataControl dc) {
+		String selectDate = "select * from " + dc.getTable() + " where user_no = ? and date between ? and ?";
+		ArrayList<DataControl> allData = new ArrayList<DataControl>();
+		try {
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(selectDate);
+			ps.setInt(1, dc.getUser());
+			ps.setString(2, dc.getStart());
+			ps.setString(3, dc.getEnd());
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				DataControl data = toData(rs, dc);
+				allData.add(data);
+			}
+		} catch (SQLException e) {
+			err.println("SelectDate Error....");
+			e.printStackTrace();
+		}
+		return allData;
+	}
+
+	// ---- SetResult ----
 	public DataControl toData(ResultSet rs, DataControl dc) throws SQLException {
-		String sql = "select item_income_name from item_" + dc.getTable() + " where item_income_no = ?";
+		String sql = "select item_" + dc.getTable() + "_name from item_" + dc.getTable() + " where item_"
+				+ dc.getTable() + "_no = ?";
 		PreparedStatement ps = DataConnection.getConnection().prepareStatement(sql);
 		ps.setString(1, rs.getString(3));
 		ResultSet result = ps.executeQuery();

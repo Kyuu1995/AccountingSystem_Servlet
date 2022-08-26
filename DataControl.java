@@ -2,12 +2,15 @@ import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public class DataControl implements Serializable {
+	private String now;
 	private int user;
 	private String table;
 	private String date;
 	private String item;
 	private int amount;
 	private String notes;
+	private String start;
+	private String end;
 
 	public DataControl() {
 	};
@@ -15,6 +18,19 @@ public class DataControl implements Serializable {
 	public DataControl(int user, String table) {
 		this.user = user;
 		this.table = table;
+	};
+
+	public DataControl(String now, int user, String table) {
+		this.now = now;
+		this.user = user;
+		this.table = table;
+	};
+
+	public DataControl(int user, String table, String start, String end) {
+		this.user = user;
+		this.table = table;
+		this.start = start;
+		this.end = end;
 	};
 
 	public DataControl(int user, String table, String date, String item, int amount, String notes) {
@@ -26,7 +42,16 @@ public class DataControl implements Serializable {
 		this.notes = notes;
 	}
 
-	// ----
+	// ---- Now ----
+	public String getNow() {
+		return now;
+	}
+
+	public void setNow(String now) {
+		this.now = now;
+	}
+
+	// ---- User ----
 	public int getUser() {
 		return user;
 	}
@@ -35,7 +60,7 @@ public class DataControl implements Serializable {
 		this.user = user;
 	}
 
-	// ----
+	// ---- Table ----
 	public String getTable() {
 		return table;
 	}
@@ -44,7 +69,7 @@ public class DataControl implements Serializable {
 		this.table = table;
 	}
 
-	// ----
+	// ---- Date ----
 	public String getDate() {
 		return date;
 	}
@@ -53,7 +78,7 @@ public class DataControl implements Serializable {
 		this.date = date;
 	}
 
-	// ----
+	// ---- Item ----
 	public String getItem() {
 		return item;
 	}
@@ -62,7 +87,7 @@ public class DataControl implements Serializable {
 		this.item = item;
 	}
 
-	// ----
+	// ---- Amount ----
 	public int getAmount() {
 		return amount;
 	}
@@ -71,13 +96,31 @@ public class DataControl implements Serializable {
 		this.amount = amount;
 	}
 
-	// ----
+	// ---- Notes ----
 	public String getNotes() {
 		return notes;
 	}
 
 	public void setNotes(String notes) {
 		this.notes = notes;
+	}
+
+	// ---- Start ----
+	public String getStart() {
+		return start;
+	}
+
+	public void setStart(String start) {
+		this.start = start;
+	}
+
+	// ---- End ----
+	public String getEnd() {
+		return end;
+	}
+
+	public void setEnd(String end) {
+		this.end = end;
 	}
 
 }
