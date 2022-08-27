@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/doSelect")
-public class DoSelect_Servlet extends HttpServlet {
+@WebServlet("/doSelectTypeDate")
+public class DoSelectTypeDate_Servlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -16,12 +16,13 @@ public class DoSelect_Servlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json;charset=UTF-8");
 		PrintWriter out = response.getWriter();
-		String now = request.getParameter("now");
+		String type = request.getParameter("type");
 		int user = Integer.parseInt(request.getParameter("user"));
-		String table = request.getParameter("table");
-		DataControl dc = new DataControl(now, user, table);
+		String start = request.getParameter("start");
+		String end = request.getParameter("end");
+		DataControl dc = new DataControl(type, user, start, end);
 		DataBase db = new DataBase();
-		List<DataControl> data = db.select(dc);
+		List<DataControl> data = db.selectTypeDate(dc);
 		int sum = 0;
 		String json = "[";
 		for (int i = 0; i < data.size(); i++) {
@@ -35,7 +36,6 @@ public class DoSelect_Servlet extends HttpServlet {
 			}
 		}
 		json += ",{\"total\":\"" + sum + "\"}]";
-		System.out.print(sum);
 		out.print(json);
 	}
 

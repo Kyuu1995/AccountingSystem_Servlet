@@ -6,15 +6,15 @@ public class DataBase {
 
 	// ---- Create ----
 	public void create(DataControl dc) {
-		String create = "insert into " + dc.getTable()
-				+ " (date, item_no, amount, notes,user_no) values (?, ?, ?, ? ,?)";
+		String create = "insert into account(type_no, date, item_no, amount, notes, user_no) values(?, ?, ?, ?, ? ,?)";
 		try {
 			PreparedStatement ps = DataConnection.getConnection().prepareStatement(create);
-			ps.setString(1, dc.getDate());
-			ps.setString(2, dc.getItem());
-			ps.setInt(3, dc.getAmount());
-			ps.setString(4, dc.getNotes());
-			ps.setInt(5, dc.getUser());
+			ps.setString(1, dc.getType());
+			ps.setString(2, dc.getDate());
+			ps.setInt(3, Integer.parseInt(dc.getItem()));
+			ps.setInt(4, dc.getAmount());
+			ps.setString(5, dc.getNotes());
+			ps.setInt(6, dc.getUser());
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			err.println("Create Error....");
@@ -25,23 +25,23 @@ public class DataBase {
 	// ---- Update ----
 	public void update(DataControl dc, DataControl dcNew) {
 		try {
-			String select = "select " + dc.getTable() + "_no from " + dc.getTable()
-					+ " where date = ?, item_no = ?, amount = ?, notes = ?";
-			PreparedStatement pst = DataConnection.getConnection().prepareStatement(select);
-			pst.setString(1, dc.getDate());
-			pst.setString(2, dc.getItem());
-			pst.setInt(3, dc.getAmount());
-			pst.setString(4, dc.getNotes());
+			String updateSelect = "select account_no from account where type = ?, date = ?, item_no = ?, amount = ?, notes = ?, user = ?";
+			PreparedStatement pst = DataConnection.getConnection().prepareStatement(updateSelect);
+			pst.setString(1, dc.getType());
+			pst.setString(2, dc.getDate());
+			pst.setInt(3, Integer.parseInt(dc.getItem()));
+			pst.setInt(4, dc.getAmount());
+			pst.setString(5, dc.getNotes());
+			pst.setInt(6, dc.getUser());
 			ResultSet rs = pst.executeQuery();
 			try {
-				String update = "update " + dc.getTable() + " set date = ?, item_no = ?, amount = ?, notes = ? where "
-						+ dc.getTable() + "_no = ?";
+				String update = "update account set date = ?, item_no = ?, amount = ?, notes = ? where account_no = ?";
 				PreparedStatement ps = DataConnection.getConnection().prepareStatement(update);
-				ps.setString(1, dc.getDate());
-				ps.setString(2, dc.getItem());
-				ps.setInt(3, dc.getAmount());
-				ps.setString(4, dc.getNotes());
-				ps.setString(5, rs.getString(1));
+				ps.setString(1, dcNew.getDate());
+				ps.setInt(2, Integer.parseInt(dc.getItem()));
+				ps.setInt(3, dcNew.getAmount());
+				ps.setString(4, dcNew.getNotes());
+				ps.setInt(5, rs.getInt(1));
 			} catch (Exception e) {
 				err.println("Update Error....");
 				// e.printStackTrace();
@@ -52,40 +52,20 @@ public class DataBase {
 		}
 	}
 
-	// ---- Select ----
-	public List<DataControl> select(DataControl dc) {
-		String select = "select * from " + dc.getTable() + " where user_no = ? and date like ?";
-		ArrayList<DataControl> allData = new ArrayList<DataControl>();
-		try {
-			PreparedStatement ps = DataConnection.getConnection().prepareStatement(select);
-			ps.setInt(1, dc.getUser());
-			ps.setString(2, dc.getNow() + "%");
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				DataControl data = toData(rs, dc);
-				allData.add(data);
-			}
-		} catch (SQLException e) {
-			err.println("Select Error....");
-			e.printStackTrace();
-		}
-		return allData;
-	}
-
 	// ---- SelectAll ----
 	public List<DataControl> selectAll(DataControl dc) {
-		String selectAll = "select * from " + dc.getTable() + " where user_no = ?";
+		String selectAll = "select * from account where user_no = ? order by date";
 		ArrayList<DataControl> allData = new ArrayList<DataControl>();
 		try {
 			PreparedStatement ps = DataConnection.getConnection().prepareStatement(selectAll);
 			ps.setInt(1, dc.getUser());
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				DataControl data = toData(rs, dc);
+				DataControl data = toData(rs, typeName(rs), itemName(rs));
 				allData.add(data);
 			}
 		} catch (SQLException e) {
-			err.println("DateSelect Error....");
+			err.println("SelectAll Error....");
 			e.printStackTrace();
 		}
 		return allData;
@@ -93,7 +73,7 @@ public class DataBase {
 
 	// ---- SelectDate ----
 	public List<DataControl> selectDate(DataControl dc) {
-		String selectDate = "select * from " + dc.getTable() + " where user_no = ? and date between ? and ?";
+		String selectDate = "select * from account where user_no = ? and date between ? and ? order by date";
 		ArrayList<DataControl> allData = new ArrayList<DataControl>();
 		try {
 			PreparedStatement ps = DataConnection.getConnection().prepareStatement(selectDate);
@@ -102,7 +82,7 @@ public class DataBase {
 			ps.setString(3, dc.getEnd());
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				DataControl data = toData(rs, dc);
+				DataControl data = toData(rs, typeName(rs), itemName(rs));
 				allData.add(data);
 			}
 		} catch (SQLException e) {
@@ -112,20 +92,113 @@ public class DataBase {
 		return allData;
 	}
 
+	// ---- SelectThisMonth ----
+	public List<DataControl> selectThisMonth(DataControl dc) {
+		String selectThisMonth = "select * from account where type_no = ? and user_no = ? and date like ? order by date";
+		ArrayList<DataControl> allData = new ArrayList<DataControl>();
+		try {
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(selectThisMonth);
+			ps.setString(1, dc.getType());
+			ps.setInt(2, dc.getUser());
+			ps.setString(3, dc.getNow() + "%");
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				DataControl data = toData(rs, typeName(rs), itemName(rs));
+				allData.add(data);
+			}
+		} catch (SQLException e) {
+			err.println("SelectThisMonth Error....");
+			// e.printStackTrace();
+		}
+		return allData;
+	}
+
+	// ---- SelectTypeAll ----
+	public List<DataControl> selectTypeAll(DataControl dc) {
+		String selectTypeAll = "select * from account where type_no = ? and user_no = ? order by date";
+		ArrayList<DataControl> allData = new ArrayList<DataControl>();
+		try {
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(selectTypeAll);
+			ps.setString(1, dc.getType());
+			ps.setInt(2, dc.getUser());
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				DataControl data = toData(rs, typeName(rs), itemName(rs));
+				allData.add(data);
+			}
+		} catch (SQLException e) {
+			err.println("SelectTypeAll Error....");
+			e.printStackTrace();
+		}
+		return allData;
+	}
+
+	// ---- SelectTypeDate ----
+	public List<DataControl> selectTypeDate(DataControl dc) {
+		String selectTableDate = "select * from account where type_no = ? and user_no = ? and date between ? and ? order by date";
+		ArrayList<DataControl> allData = new ArrayList<DataControl>();
+		try {
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(selectTableDate);
+			ps.setString(1, dc.getType());
+			ps.setInt(2, dc.getUser());
+			ps.setString(3, dc.getStart());
+			ps.setString(4, dc.getEnd());
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				DataControl data = toData(rs, typeName(rs), itemName(rs));
+				allData.add(data);
+			}
+		} catch (SQLException e) {
+			err.println("SelectTableDate Error....");
+			e.printStackTrace();
+		}
+		return allData;
+	}
+
 	// ---- SetResult ----
-	public DataControl toData(ResultSet rs, DataControl dc) throws SQLException {
-		String sql = "select item_" + dc.getTable() + "_name from item_" + dc.getTable() + " where item_"
-				+ dc.getTable() + "_no = ?";
-		PreparedStatement ps = DataConnection.getConnection().prepareStatement(sql);
-		ps.setString(1, rs.getString(3));
-		ResultSet result = ps.executeQuery();
-		result.next();
+	public DataControl toData(ResultSet rs, String type, String item) throws SQLException {
 		DataControl data = new DataControl();
-		data.setDate(rs.getString(2));
-		data.setItem(result.getString(1));
-		data.setAmount(rs.getInt(4));
-		data.setNotes(rs.getString(5));
+		data.setType(type);
+		data.setDate(rs.getString(3));
+		data.setItem(item);
+		data.setAmount(rs.getInt(5));
+		data.setNotes(rs.getString(6));
 		return data;
+	}
+
+	// ---- TypeName ----
+	public String typeName(ResultSet rs) {
+		String sql = "select type_name from type where type_no = ?";
+		try {
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(sql);
+			ps.setInt(1, rs.getInt(2));
+			ResultSet result = ps.executeQuery();
+			result.next();
+			return result.getString(1);
+		} catch (SQLException e) {
+			err.println("ItemName Error....");
+			// e.printStackTrace();
+			return null;
+		}
+
+	}
+
+	// ---- ItemName ----
+	public String itemName(ResultSet rs) {
+		String sql = "select item_name from item where type_no = ? and item_no = ?";
+		try {
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(sql);
+			ps.setInt(1, rs.getInt(2));
+			ps.setInt(2, rs.getInt(4));
+			ResultSet result = ps.executeQuery();
+			result.next();
+			return result.getString(1);
+		} catch (SQLException e) {
+			err.println("ItemName Error....");
+			// e.printStackTrace();
+			return null;
+		}
+
 	}
 
 }

@@ -2,71 +2,63 @@ import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public class DataControl implements Serializable {
-	private String now;
-	private int user;
-	private String table;
+	private String type;
 	private String date;
 	private String item;
 	private int amount;
 	private String notes;
+	private int user;
+	private String now;
 	private String start;
 	private String end;
 
 	public DataControl() {
 	};
 
-	public DataControl(int user, String table) {
+	public DataControl(int user) {
 		this.user = user;
-		this.table = table;
 	};
 
-	public DataControl(String now, int user, String table) {
+	public DataControl(String type, int user) {
+		this.type = type;
+		this.user = user;
+	};
+
+	public DataControl(String type, int user, String now) {
+		this.type = type;
+		this.user = user;
 		this.now = now;
-		this.user = user;
-		this.table = table;
 	};
 
-	public DataControl(int user, String table, String start, String end) {
+	public DataControl(int user, String start, String end) {
 		this.user = user;
-		this.table = table;
 		this.start = start;
 		this.end = end;
 	};
 
-	public DataControl(int user, String table, String date, String item, int amount, String notes) {
+	public DataControl(String type, int user, String start, String end) {
+		this.type = type;
 		this.user = user;
-		this.table = table;
+		this.start = start;
+		this.end = end;
+	};
+
+	public DataControl(String type, String date, String item, int amount, String notes, int user) {
+		this.type = type;
 		this.date = date;
 		this.item = item;
 		this.amount = amount;
 		this.notes = notes;
-	}
-
-	// ---- Now ----
-	public String getNow() {
-		return now;
-	}
-
-	public void setNow(String now) {
-		this.now = now;
-	}
-
-	// ---- User ----
-	public int getUser() {
-		return user;
-	}
-
-	public void setUser(int user) {
 		this.user = user;
 	}
 
-	// ---- Table ----
-	public String getTable() {
-		return table;
+	// ---- Type ----
+	public String getType() {
+		return type;
 	}
 
-	public void setTable(String table) {
-		this.table = table;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	// ---- Date ----
@@ -103,6 +95,24 @@ public class DataControl implements Serializable {
 
 	public void setNotes(String notes) {
 		this.notes = notes;
+	}
+
+	// ---- User ----
+	public int getUser() {
+		return user;
+	}
+
+	public void setUser(int user) {
+		this.user = user;
+	}
+
+	// ---- Now ----
+	public String getNow() {
+		return now;
+	}
+
+	public void setNow(String now) {
+		this.now = now;
 	}
 
 	// ---- Start ----
