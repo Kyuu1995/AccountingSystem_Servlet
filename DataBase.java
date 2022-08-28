@@ -4,6 +4,26 @@ import java.util.*;
 
 public class DataBase {
 
+	// ---- CheckID ----
+	public DataControl checkID(DataControl dc) {
+		DataControl data = new DataControl();
+		String checkID = "select user_no, password, nickname from user where username = ?";
+		try {
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(checkID);
+			ps.setString(1, dc.getUsername());
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			if (rs.getString(2).equals(dc.getPassword())) {
+				data.setNickname(rs.getString(3));
+				data.setUser(Integer.parseInt(rs.getString(1)));
+			}
+		} catch (SQLException e) {
+			err.println("CheckID Error....");
+			// e.printStackTrace();
+		}
+		return data;
+	}
+
 	// ---- Create ----
 	public void create(DataControl dc) {
 		String create = "insert into account(type_no, date, item_no, amount, notes, user_no) values(?, ?, ?, ?, ? ,?)";

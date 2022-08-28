@@ -1,7 +1,10 @@
 import java.io.Serializable;
 
-@SuppressWarnings("serial")
 public class DataControl implements Serializable {
+	private static final long serialVersionUID = 1L;
+	private String username;
+	private String password;
+	private String nickname;
 	private String type;
 	private String date;
 	private String item;
@@ -15,27 +18,38 @@ public class DataControl implements Serializable {
 	public DataControl() {
 	};
 
+	// ---- DoSelectAll ----
 	public DataControl(int user) {
 		this.user = user;
 	};
 
+	// ---- DoCheckID ----
+	public DataControl(String username, String password) {
+		this.username = username;
+		this.password = password;
+	};
+
+	// ---- DoSelectTypeAll ----
 	public DataControl(String type, int user) {
 		this.type = type;
 		this.user = user;
 	};
 
+	// ---- DoSelectThisMonth ----
 	public DataControl(String type, int user, String now) {
 		this.type = type;
 		this.user = user;
 		this.now = now;
 	};
 
+	// ---- DoSelectDate ----
 	public DataControl(int user, String start, String end) {
 		this.user = user;
 		this.start = start;
 		this.end = end;
 	};
 
+	// ---- DoSelectTypeDate ----
 	public DataControl(String type, int user, String start, String end) {
 		this.type = type;
 		this.user = user;
@@ -43,6 +57,7 @@ public class DataControl implements Serializable {
 		this.end = end;
 	};
 
+	// ---- DoCreate / DoUpdate ----
 	public DataControl(String type, String date, String item, int amount, String notes, int user) {
 		this.type = type;
 		this.date = date;
@@ -50,6 +65,33 @@ public class DataControl implements Serializable {
 		this.amount = amount;
 		this.notes = notes;
 		this.user = user;
+	}
+
+	// ---- Username ----
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	// ---- Password ----
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	// ---- Nickname ----
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
 	// ---- Type ----
