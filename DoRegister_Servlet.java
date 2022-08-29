@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/doCheckID")
-public class DoCheckID_Servlet extends HttpServlet {
+@WebServlet("/doRegister")
+public class DoRegister_Servlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -18,10 +18,14 @@ public class DoCheckID_Servlet extends HttpServlet {
 		response.setContentType("application/json;charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		String username = request.getParameter("username");
-		DataControl dc = new DataControl(username);
+		String password = request.getParameter("password");
+		String nickname = request.getParameter("nickname");
+		String email = request.getParameter("email");
+		String gender = request.getParameter("gender");
+		DataControl dc = new DataControl(username, password, nickname, email, gender);
 		DataBase db = new DataBase();
-		DataControl data = db.checkID(dc);
-		String json = "{\"user\":\"" + data.getUser() + "\",\"message\":\"" + data.getMessage() + "\"}";
+		DataControl data = db.register(dc);
+		String json = "{\"message\":\"" + data.getMessage() + "\"}";
 		out.print(json);
 	}
 

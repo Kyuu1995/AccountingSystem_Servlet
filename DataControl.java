@@ -5,6 +5,9 @@ public class DataControl implements Serializable {
 	private String username;
 	private String password;
 	private String nickname;
+	private String email;
+	private String gender;
+	private String message;
 	private String type;
 	private String date;
 	private String item;
@@ -18,15 +21,29 @@ public class DataControl implements Serializable {
 	public DataControl() {
 	};
 
-	// ---- DoSelectAll ----
-	public DataControl(int user) {
-		this.user = user;
+	// ---- DoCheckID ----
+	public DataControl(String username) {
+		this.username = username;
 	};
 
-	// ---- DoCheckID ----
+	// ---- DoLogin ----
 	public DataControl(String username, String password) {
 		this.username = username;
 		this.password = password;
+	};
+
+	// ---- DoRegister ----
+	public DataControl(String username, String password, String nickname, String email, String gender) {
+		this.username = username;
+		this.password = password;
+		this.nickname = nickname;
+		this.email = email;
+		this.gender = gender;
+	};
+
+	// ---- DoSelectAll ----
+	public DataControl(int user) {
+		this.user = user;
 	};
 
 	// ---- DoSelectTypeAll ----
@@ -92,6 +109,33 @@ public class DataControl implements Serializable {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+
+	// ---- Email ----
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	// ---- Gender ----
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	// ---- Message ----
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
 	// ---- Type ----
