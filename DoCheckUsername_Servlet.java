@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/doCheckID")
-public class DoCheckID_Servlet extends HttpServlet {
+@WebServlet("/doCheckUsername")
+public class DoCheckUsername_Servlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -20,7 +20,7 @@ public class DoCheckID_Servlet extends HttpServlet {
 		String username = request.getParameter("username");
 		DataControl dc = new DataControl(username);
 		DataBase db = new DataBase();
-		DataControl data = db.checkID(dc);
+		DataControl data = db.checkUsername(dc);
 		String json = "{\"user\":\"" + data.getUser() + "\",\"message\":\"" + data.getMessage() + "\"}";
 		out.print(json);
 	}

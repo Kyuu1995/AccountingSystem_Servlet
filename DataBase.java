@@ -3,19 +3,37 @@ import java.sql.*;
 import java.util.*;
 
 public class DataBase {
-// ----CheckID ----
-	public DataControl checkID(DataControl dc) {
+
+	// ---- CheckUsername ----
+	public DataControl checkUsername(DataControl dc) {
 		DataControl data = new DataControl();
-		String checkID = "select user_no from user where username = ?";
+		String checkUsername = "select user_no from user where username = ?";
 		try {
-			PreparedStatement ps = DataConnection.getConnection().prepareStatement(checkID);
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(checkUsername);
 			ps.setString(1, dc.getUsername());
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			data.setUser(Integer.parseInt(rs.getString(1)));
-			data.setMessage("此帳號已有人使用....");
+			data.setMessage("此帳號已被使用....");
 		} catch (SQLException e) {
 			data.setMessage("查無此帳號....");
+			// e.printStackTrace();
+		}
+		return data;
+	}
+
+	// ---- CheckPassword ----
+	public DataControl checkPassword(DataControl dc) {
+		DataControl data = new DataControl();
+		String checkPassword = "select password from user where user_no = ?";
+		try {
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(checkPassword);
+			ps.setInt(1, dc.getUser());
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			data.setPassword(rs.getString(1));
+		} catch (SQLException e) {
+			err.println("CheckPassword Error....");
 			// e.printStackTrace();
 		}
 		return data;
@@ -60,6 +78,26 @@ public class DataBase {
 		} catch (SQLException e) {
 			err.println("Register Error....");
 			e.printStackTrace();
+		}
+		return data;
+	}
+
+	// ---- ShowData ----
+	public DataControl showData(DataControl dc) {
+		DataControl data = new DataControl();
+		String showData = "select username, password, email, gender from user where user_no = ?";
+		try {
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(showData);
+			ps.setInt(1, dc.getUser());
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			data.setUsername(rs.getString(1));
+			data.setPassword(rs.getString(2));
+			data.setEmail(rs.getString(3));
+			data.setGender(rs.getString(4));
+		} catch (SQLException e) {
+			err.println("ShowData Error....");
+			// e.printStackTrace();
 		}
 		return data;
 	}

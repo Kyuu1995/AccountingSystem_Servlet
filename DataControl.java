@@ -19,18 +19,23 @@ public class DataControl implements Serializable {
 	private String end;
 
 	public DataControl() {
-	};
+	}
 
-	// ---- DoCheckID ----
+	// ---- DoCheckUsername ----
 	public DataControl(String username) {
 		this.username = username;
-	};
+	}
+
+	// ---- DoCheckPassword / DoSelectAll ----
+	public DataControl(int user) {
+		this.user = user;
+	}
 
 	// ---- DoLogin ----
 	public DataControl(String username, String password) {
 		this.username = username;
 		this.password = password;
-	};
+	}
 
 	// ---- DoRegister ----
 	public DataControl(String username, String password, String nickname, String email, String gender) {
@@ -39,32 +44,27 @@ public class DataControl implements Serializable {
 		this.nickname = nickname;
 		this.email = email;
 		this.gender = gender;
-	};
-
-	// ---- DoSelectAll ----
-	public DataControl(int user) {
-		this.user = user;
-	};
+	}
 
 	// ---- DoSelectTypeAll ----
 	public DataControl(String type, int user) {
 		this.type = type;
 		this.user = user;
-	};
+	}
 
 	// ---- DoSelectThisMonth ----
 	public DataControl(String type, int user, String now) {
 		this.type = type;
 		this.user = user;
 		this.now = now;
-	};
+	}
 
 	// ---- DoSelectDate ----
 	public DataControl(int user, String start, String end) {
 		this.user = user;
 		this.start = start;
 		this.end = end;
-	};
+	}
 
 	// ---- DoSelectTypeDate ----
 	public DataControl(String type, int user, String start, String end) {
@@ -72,7 +72,7 @@ public class DataControl implements Serializable {
 		this.user = user;
 		this.start = start;
 		this.end = end;
-	};
+	}
 
 	// ---- DoCreate / DoUpdate ----
 	public DataControl(String type, String date, String item, int amount, String notes, int user) {
