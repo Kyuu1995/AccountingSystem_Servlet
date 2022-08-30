@@ -26,7 +26,7 @@ public class DataControl implements Serializable {
 		this.username = username;
 	}
 
-	// ---- DoCheckPassword / DoSelectAll ----
+	// ---- DoCheckPassword / DoShowProfile / DoSelectAll ----
 	public DataControl(int user) {
 		this.user = user;
 	}
@@ -40,6 +40,15 @@ public class DataControl implements Serializable {
 	// ---- DoRegister ----
 	public DataControl(String username, String password, String nickname, String email, String gender) {
 		this.username = username;
+		this.password = password;
+		this.nickname = nickname;
+		this.email = email;
+		this.gender = gender;
+	}
+
+	// ---- DoUpdateProfile ----
+	public DataControl(int user, String password, String nickname, String email, String gender) {
+		this.user = user;
 		this.password = password;
 		this.nickname = nickname;
 		this.email = email;
@@ -74,7 +83,7 @@ public class DataControl implements Serializable {
 		this.end = end;
 	}
 
-	// ---- DoCreate / DoUpdate ----
+	// ---- DoCreateData / DoUpdateData ----
 	public DataControl(String type, String date, String item, int amount, String notes, int user) {
 		this.type = type;
 		this.date = date;

@@ -82,19 +82,20 @@ public class DataBase {
 		return data;
 	}
 
-	// ---- ShowData ----
-	public DataControl showData(DataControl dc) {
+	// ---- ShowProfile ----
+	public DataControl showProfile(DataControl dc) {
 		DataControl data = new DataControl();
-		String showData = "select username, password, email, gender from user where user_no = ?";
+		String showProfile = "select username, password, nickname, email, gender from user where user_no = ?";
 		try {
-			PreparedStatement ps = DataConnection.getConnection().prepareStatement(showData);
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(showProfile);
 			ps.setInt(1, dc.getUser());
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			data.setUsername(rs.getString(1));
 			data.setPassword(rs.getString(2));
-			data.setEmail(rs.getString(3));
-			data.setGender(rs.getString(4));
+			data.setNickname(rs.getString(3));
+			data.setEmail(rs.getString(4));
+			data.setGender(rs.getString(5));
 		} catch (SQLException e) {
 			err.println("ShowData Error....");
 			// e.printStackTrace();
@@ -102,11 +103,32 @@ public class DataBase {
 		return data;
 	}
 
-	// ---- Create ----
-	public void create(DataControl dc) {
-		String create = "insert into account(type_no, date, item_no, amount, notes, user_no) values(?, ?, ?, ?, ? ,?)";
+	// ----- UpdateProfile ----
+	public DataControl updateProfile(DataControl dc) {
+		DataControl data = new DataControl();
+		String updateData = "update user set password = ?, nickname = ?, email = ?, gender = ? where user_no = ?";
 		try {
-			PreparedStatement ps = DataConnection.getConnection().prepareStatement(create);
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(updateData);
+			ps.setString(1, dc.getPassword());
+			ps.setString(2, dc.getNickname());
+			ps.setString(3, dc.getEmail());
+			ps.setString(4, dc.getGender());
+			ps.setInt(5, dc.getUser());
+			ps.executeUpdate();
+			data.setMessage("修改成功....");
+		} catch (Exception e) {
+			err.println("UpdateProfile Error....");
+			// e.printStackTrace();
+		}
+		return data;
+	}
+
+	// ---- CreateData ----
+	public DataControl createData(DataControl dc) {
+		DataControl data = new DataControl();
+		String createData = "insert into account(type_no, date, item_no, amount, notes, user_no) values(?, ?, ?, ?, ? ,?)";
+		try {
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(createData);
 			ps.setString(1, dc.getType());
 			ps.setString(2, dc.getDate());
 			ps.setInt(3, Integer.parseInt(dc.getItem()));
@@ -114,14 +136,16 @@ public class DataBase {
 			ps.setString(5, dc.getNotes());
 			ps.setInt(6, dc.getUser());
 			ps.executeUpdate();
+			data.setMessage("新增成功....");
 		} catch (SQLException e) {
 			err.println("Create Error....");
 			// e.printStackTrace();
 		}
+		return data;
 	}
 
-	// ---- Update ----
-	public void update(DataControl dc, DataControl dcNew) {
+	// ---- UpdateData ----
+	public void updateData(DataControl dc, DataControl dcNew) {
 		try {
 			String updateSelect = "select account_no from account where type = ?, date = ?, item_no = ?, amount = ?, notes = ?, user = ?";
 			PreparedStatement pst = DataConnection.getConnection().prepareStatement(updateSelect);
@@ -133,15 +157,15 @@ public class DataBase {
 			pst.setInt(6, dc.getUser());
 			ResultSet rs = pst.executeQuery();
 			try {
-				String update = "update account set date = ?, item_no = ?, amount = ?, notes = ? where account_no = ?";
-				PreparedStatement ps = DataConnection.getConnection().prepareStatement(update);
+				String updateData = "update account set date = ?, item_no = ?, amount = ?, notes = ? where account_no = ?";
+				PreparedStatement ps = DataConnection.getConnection().prepareStatement(updateData);
 				ps.setString(1, dcNew.getDate());
 				ps.setInt(2, Integer.parseInt(dc.getItem()));
 				ps.setInt(3, dcNew.getAmount());
 				ps.setString(4, dcNew.getNotes());
 				ps.setInt(5, rs.getInt(1));
 			} catch (Exception e) {
-				err.println("Update Error....");
+				err.println("UpdateData Error....");
 				// e.printStackTrace();
 			}
 		} catch (SQLException e) {
