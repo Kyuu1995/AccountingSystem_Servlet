@@ -1,14 +1,14 @@
+
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/doSelectTypeAll")
-public class DoSelectTypeAll_Servlet extends HttpServlet {
+@WebServlet("/doDeleteData")
+public class DoDeleteData_Servlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -16,24 +16,12 @@ public class DoSelectTypeAll_Servlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json;charset=UTF-8");
 		PrintWriter out = response.getWriter();
-		String type = request.getParameter("type");
-		int user = Integer.parseInt(request.getParameter("user"));
-		DataControl dc = new DataControl(type, user);
+		int accountNo = Integer.parseInt(request.getParameter("accountNo"));
+		String message = "";
+		DataControl dc = new DataControl(accountNo, message);
 		DataBase db = new DataBase();
-		List<DataControl> data = db.selectTypeAll(dc);
-		int sum = 0;
-		String json = "[";
-		for (int i = 0; i < data.size(); i++) {
-			json += "{\"date\":\"" + data.get(i).getDate() + "\"";
-			json += ",\"item\":\"" + data.get(i).getItem() + "\"";
-			json += ",\"amount\":\"" + data.get(i).getAmount() + "\"";
-			json += ",\"notes\":\"" + data.get(i).getNotes() + "\"}";
-			sum += data.get(i).getAmount();
-			if (i < data.size() - 1) {
-				json += ",";
-			}
-		}
-		json += ",{\"total\":\"" + sum + "\"}]";
+		DataControl data = db.deleteData(dc);
+		String json = "{\"message\":\"" + data.getMessage() + "\"}";
 		out.print(json);
 	}
 

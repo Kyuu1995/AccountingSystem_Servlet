@@ -144,42 +144,67 @@ public class DataBase {
 		return data;
 	}
 
-	// ---- UpdateData ----
-	public void updateData(DataControl dc, DataControl dcNew) {
+	// ---- DeleteData ----
+	public DataControl deleteData(DataControl dc) {
+		DataControl data = new DataControl();
+		String deleteData = "delete from account where account_no = ?";
 		try {
-			String updateSelect = "select account_no from account where type = ?, date = ?, item_no = ?, amount = ?, notes = ?, user = ?";
-			PreparedStatement pst = DataConnection.getConnection().prepareStatement(updateSelect);
-			pst.setString(1, dc.getType());
-			pst.setString(2, dc.getDate());
-			pst.setInt(3, Integer.parseInt(dc.getItem()));
-			pst.setInt(4, dc.getAmount());
-			pst.setString(5, dc.getNotes());
-			pst.setInt(6, dc.getUser());
-			ResultSet rs = pst.executeQuery();
-			try {
-				String updateData = "update account set date = ?, item_no = ?, amount = ?, notes = ? where account_no = ?";
-				PreparedStatement ps = DataConnection.getConnection().prepareStatement(updateData);
-				ps.setString(1, dcNew.getDate());
-				ps.setInt(2, Integer.parseInt(dc.getItem()));
-				ps.setInt(3, dcNew.getAmount());
-				ps.setString(4, dcNew.getNotes());
-				ps.setInt(5, rs.getInt(1));
-			} catch (Exception e) {
-				err.println("UpdateData Error....");
-				// e.printStackTrace();
-			}
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(deleteData);
+			ps.setInt(1, dc.getAccountNo());
+			ps.executeUpdate();
+			data.setMessage("刪除成功....");
 		} catch (SQLException e) {
-			err.println("UpdateSelect Error....");
-			// e.printStackTrace();
+			err.println("DeleteData Error....");
+			e.printStackTrace();
 		}
+		return data;
 	}
 
-	// ---- SelectThisMonth ----
-	public List<DataControl> selectThisMonth(DataControl dc) {
-		String selectThisMonth = "select * from account where type_no = ? and user_no = ? and date like ? order by date";
+	// ---- UpdateData ----
+	public DataControl updateData(DataControl dc) {
+		DataControl data = new DataControl();
+		String updateData = "update account set type_no = ?, date = ?, item_no = ?, amount = ?, notes = ? where account_no = ?";
+		try {
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(updateData);
+			ps.setString(1, dc.getType());
+			ps.setString(2, dc.getDate());
+			ps.setInt(3, Integer.parseInt(dc.getItem()));
+			ps.setInt(4, dc.getAmount());
+			ps.setString(5, dc.getNotes());
+			ps.setInt(6, dc.getAccountNo());
+			ps.executeUpdate();
+			data.setMessage("修改成功....");
+		} catch (SQLException e) {
+			err.println("UpdateData Error....");
+			// e.printStackTrace();
+		}
+		return data;
+	}
+
+	// ---- GetItemNo ----
+	public DataControl getItemNo(DataControl dc) {
+		DataControl data = new DataControl();
+		String sql = "select item_no from item where type_no = ? and item_name = ?";
+		try {
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(sql);
+			ps.setString(1, dc.getType());
+			ps.setString(2, dc.getItem());
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			data.setItem(rs.getString(1));
+		} catch (SQLException e) {
+			err.println("GetItemNo Error....");
+			// e.printStackTrace();
+		}
+		return data;
+	}
+
+	// ---- ReadThisMonth ----
+	public List<DataControl> readThisMonth(DataControl dc) {
+		String readThisMonth = "select * from account where type_no = ? and user_no = ? and date like ? order by date";
 		ArrayList<DataControl> allData = new ArrayList<DataControl>();
 		try {
-			PreparedStatement ps = DataConnection.getConnection().prepareStatement(selectThisMonth);
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(readThisMonth);
 			ps.setString(1, dc.getType());
 			ps.setInt(2, dc.getUser());
 			ps.setString(3, dc.getNow() + "%");
@@ -195,12 +220,12 @@ public class DataBase {
 		return allData;
 	}
 
-	// ---- SelectTypeAll ----
-	public List<DataControl> selectTypeAll(DataControl dc) {
-		String selectTypeAll = "select * from account where type_no = ? and user_no = ? order by date";
+	// ---- ReadTypeAll ----
+	public List<DataControl> readTypeAll(DataControl dc) {
+		String readTypeAll = "select * from account where type_no = ? and user_no = ? order by date";
 		ArrayList<DataControl> allData = new ArrayList<DataControl>();
 		try {
-			PreparedStatement ps = DataConnection.getConnection().prepareStatement(selectTypeAll);
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(readTypeAll);
 			ps.setString(1, dc.getType());
 			ps.setInt(2, dc.getUser());
 			ResultSet rs = ps.executeQuery();
@@ -210,17 +235,17 @@ public class DataBase {
 			}
 		} catch (SQLException e) {
 			err.println("SelectTypeAll Error....");
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 		return allData;
 	}
 
-	// ---- SelectTypeDate ----
-	public List<DataControl> selectTypeDate(DataControl dc) {
-		String selectTableDate = "select * from account where type_no = ? and user_no = ? and date between ? and ? order by date";
+	// ---- ReadTypeDate ----
+	public List<DataControl> readTypeDate(DataControl dc) {
+		String readTableDate = "select * from account where type_no = ? and user_no = ? and date between ? and ? order by date";
 		ArrayList<DataControl> allData = new ArrayList<DataControl>();
 		try {
-			PreparedStatement ps = DataConnection.getConnection().prepareStatement(selectTableDate);
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(readTableDate);
 			ps.setString(1, dc.getType());
 			ps.setInt(2, dc.getUser());
 			ps.setString(3, dc.getStart());
@@ -232,17 +257,17 @@ public class DataBase {
 			}
 		} catch (SQLException e) {
 			err.println("SelectTableDate Error....");
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 		return allData;
 	}
 
-	// ---- SelectAll ----
-	public List<DataControl> selectAll(DataControl dc) {
-		String selectAll = "select * from account where user_no = ? order by date";
+	// ---- ReadAll ----
+	public List<DataControl> readAll(DataControl dc) {
+		String readAll = "select * from account where user_no = ? order by date";
 		ArrayList<DataControl> allData = new ArrayList<DataControl>();
 		try {
-			PreparedStatement ps = DataConnection.getConnection().prepareStatement(selectAll);
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(readAll);
 			ps.setInt(1, dc.getUser());
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -251,17 +276,17 @@ public class DataBase {
 			}
 		} catch (SQLException e) {
 			err.println("SelectAll Error....");
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 		return allData;
 	}
 
-	// ---- SelectDate ----
-	public List<DataControl> selectDate(DataControl dc) {
-		String selectDate = "select * from account where user_no = ? and date between ? and ? order by date";
+	// ---- ReadDate ----
+	public List<DataControl> readDate(DataControl dc) {
+		String readDate = "select * from account where user_no = ? and date between ? and ? order by date";
 		ArrayList<DataControl> allData = new ArrayList<DataControl>();
 		try {
-			PreparedStatement ps = DataConnection.getConnection().prepareStatement(selectDate);
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(readDate);
 			ps.setInt(1, dc.getUser());
 			ps.setString(2, dc.getStart());
 			ps.setString(3, dc.getEnd());
@@ -272,7 +297,7 @@ public class DataBase {
 			}
 		} catch (SQLException e) {
 			err.println("SelectDate Error....");
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 		return allData;
 	}
@@ -280,6 +305,7 @@ public class DataBase {
 	// ---- SetResult ----
 	public DataControl toData(ResultSet rs, String type, String item) throws SQLException {
 		DataControl data = new DataControl();
+		data.setAccountNo(rs.getInt(1));
 		data.setType(type);
 		data.setDate(rs.getString(3));
 		data.setItem(item);
@@ -302,7 +328,6 @@ public class DataBase {
 			// e.printStackTrace();
 			return null;
 		}
-
 	}
 
 	// ---- ItemName ----
@@ -320,7 +345,6 @@ public class DataBase {
 			// e.printStackTrace();
 			return null;
 		}
-
 	}
 
 }

@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/doSelectDate")
-public class DoSelectDate_Servlet extends HttpServlet {
+@WebServlet("/doReadTypeAll")
+public class DoReadTypeAll_Servlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -16,25 +16,19 @@ public class DoSelectDate_Servlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json;charset=UTF-8");
 		PrintWriter out = response.getWriter();
+		String type = request.getParameter("type");
 		int user = Integer.parseInt(request.getParameter("user"));
-		String start = request.getParameter("start");
-		String end = request.getParameter("end");
-		DataControl dc = new DataControl(user, start, end);
+		DataControl dc = new DataControl(type, user);
 		DataBase db = new DataBase();
-		List<DataControl> data = db.selectDate(dc);
+		List<DataControl> data = db.readTypeAll(dc);
 		int sum = 0;
 		String json = "[";
 		for (int i = 0; i < data.size(); i++) {
-			json += "{\"type\":\"" + data.get(i).getType() + "\"";
-			json += ",\"date\":\"" + data.get(i).getDate() + "\"";
+			json += "{\"date\":\"" + data.get(i).getDate() + "\"";
 			json += ",\"item\":\"" + data.get(i).getItem() + "\"";
 			json += ",\"amount\":\"" + data.get(i).getAmount() + "\"";
 			json += ",\"notes\":\"" + data.get(i).getNotes() + "\"}";
-			if (data.get(i).getType().equals("收入")) {
-				sum += data.get(i).getAmount();
-			} else if (data.get(i).getType().equals("支出")) {
-				sum -= data.get(i).getAmount();
-			}
+			sum += data.get(i).getAmount();
 			if (i < data.size() - 1) {
 				json += ",";
 			}

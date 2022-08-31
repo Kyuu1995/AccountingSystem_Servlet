@@ -8,6 +8,7 @@ public class DataControl implements Serializable {
 	private String email;
 	private String gender;
 	private String message;
+	private int accountNo;
 	private String type;
 	private String date;
 	private String item;
@@ -26,7 +27,7 @@ public class DataControl implements Serializable {
 		this.username = username;
 	}
 
-	// ---- DoCheckPassword / DoShowProfile / DoSelectAll ----
+	// ---- DoCheckPassword / DoShowProfile / DoReadAll ----
 	public DataControl(int user) {
 		this.user = user;
 	}
@@ -55,27 +56,27 @@ public class DataControl implements Serializable {
 		this.gender = gender;
 	}
 
-	// ---- DoSelectTypeAll ----
+	// ---- DoReadTypeAll ----
 	public DataControl(String type, int user) {
 		this.type = type;
 		this.user = user;
 	}
 
-	// ---- DoSelectThisMonth ----
+	// ---- DoReadThisMonth ----
 	public DataControl(String type, int user, String now) {
 		this.type = type;
 		this.user = user;
 		this.now = now;
 	}
 
-	// ---- DoSelectDate ----
+	// ---- DoReadDate ----
 	public DataControl(int user, String start, String end) {
 		this.user = user;
 		this.start = start;
 		this.end = end;
 	}
 
-	// ---- DoSelectTypeDate ----
+	// ---- DoReadTypeDate ----
 	public DataControl(String type, int user, String start, String end) {
 		this.type = type;
 		this.user = user;
@@ -83,7 +84,7 @@ public class DataControl implements Serializable {
 		this.end = end;
 	}
 
-	// ---- DoCreateData / DoUpdateData ----
+	// ---- DoCreateData ----
 	public DataControl(String type, String date, String item, int amount, String notes, int user) {
 		this.type = type;
 		this.date = date;
@@ -91,6 +92,29 @@ public class DataControl implements Serializable {
 		this.amount = amount;
 		this.notes = notes;
 		this.user = user;
+	}
+
+	// ---- DoUpdateData ----
+	public DataControl(int accountNo, String type, String date, String item, int amount, String notes) {
+		this.accountNo = accountNo;
+		this.type = type;
+		this.date = date;
+		this.item = item;
+		this.amount = amount;
+		this.notes = notes;
+	}
+
+	// ---- DoDeleteData ----
+	public DataControl(int accountNo, String message) {
+		this.accountNo = accountNo;
+		this.message = message;
+	}
+
+	// ---- DoGetItemNo ----
+	public DataControl(String type, String item, String message) {
+		this.type = type;
+		this.item = item;
+		this.message = message;
 	}
 
 	// ---- Username ----
@@ -145,6 +169,15 @@ public class DataControl implements Serializable {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	// ---- AccountNo ----
+	public int getAccountNo() {
+		return accountNo;
+	}
+
+	public void setAccountNo(int accountNo) {
+		this.accountNo = accountNo;
 	}
 
 	// ---- Type ----
