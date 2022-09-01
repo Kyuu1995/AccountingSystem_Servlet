@@ -28,9 +28,9 @@ public class DoReadAll_Servlet extends HttpServlet {
 			json += ",\"item\":\"" + data.get(i).getItem() + "\"";
 			json += ",\"amount\":\"" + data.get(i).getAmount() + "\"";
 			json += ",\"notes\":\"" + data.get(i).getNotes() + "\"}";
-			if (data.get(i).getType().equals("���J")) {
+			if (data.get(i).getType().equals("收入")) {
 				sum += data.get(i).getAmount();
-			} else if (data.get(i).getType().equals("��X")) {
+			} else if (data.get(i).getType().equals("支出")) {
 				sum -= data.get(i).getAmount();
 			}
 			if (i < data.size() - 1) {

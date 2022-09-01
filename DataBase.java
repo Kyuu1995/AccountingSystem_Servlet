@@ -144,22 +144,6 @@ public class DataBase {
 		return data;
 	}
 
-	// ---- DeleteData ----
-	public DataControl deleteData(DataControl dc) {
-		DataControl data = new DataControl();
-		String deleteData = "delete from account where account_no = ?";
-		try {
-			PreparedStatement ps = DataConnection.getConnection().prepareStatement(deleteData);
-			ps.setInt(1, dc.getAccountNo());
-			ps.executeUpdate();
-			data.setMessage("刪除成功....");
-		} catch (SQLException e) {
-			err.println("DeleteData Error....");
-			e.printStackTrace();
-		}
-		return data;
-	}
-
 	// ---- UpdateData ----
 	public DataControl updateData(DataControl dc) {
 		DataControl data = new DataControl();
@@ -177,6 +161,22 @@ public class DataBase {
 		} catch (SQLException e) {
 			err.println("UpdateData Error....");
 			// e.printStackTrace();
+		}
+		return data;
+	}
+
+	// ---- DeleteData ----
+	public DataControl deleteData(DataControl dc) {
+		DataControl data = new DataControl();
+		String deleteData = "delete from account where account_no = ?";
+		try {
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(deleteData);
+			ps.setInt(1, dc.getAccountNo());
+			ps.executeUpdate();
+			data.setMessage("刪除成功....");
+		} catch (SQLException e) {
+			err.println("DeleteData Error....");
+			e.printStackTrace();
 		}
 		return data;
 	}

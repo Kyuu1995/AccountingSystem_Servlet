@@ -26,7 +26,8 @@ public class DoReadTypeDate_Servlet extends HttpServlet {
 		int sum = 0;
 		String json = "[";
 		for (int i = 0; i < data.size(); i++) {
-			json += "{\"date\":\"" + data.get(i).getDate() + "\"";
+			json += "{\"accountNo\":\"" + data.get(i).getAccountNo() + "\"";
+			json += ",\"date\":\"" + data.get(i).getDate() + "\"";
 			json += ",\"item\":\"" + data.get(i).getItem() + "\"";
 			json += ",\"amount\":\"" + data.get(i).getAmount() + "\"";
 			json += ",\"notes\":\"" + data.get(i).getNotes() + "\"}";
