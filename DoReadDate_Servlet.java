@@ -30,9 +30,9 @@ public class DoReadDate_Servlet extends HttpServlet {
 			json += ",\"item\":\"" + data.get(i).getItem() + "\"";
 			json += ",\"amount\":\"" + data.get(i).getAmount() + "\"";
 			json += ",\"notes\":\"" + data.get(i).getNotes() + "\"}";
-			if (data.get(i).getType().equals("æ”¶å…¥")) {
+			if (data.get(i).getType().equals("¦¬¤J")) {
 				sum += data.get(i).getAmount();
-			} else if (data.get(i).getType().equals("æ”¯å‡º")) {
+			} else if (data.get(i).getType().equals("¤ä¥X")) {
 				sum -= data.get(i).getAmount();
 			}
 			if (i < data.size() - 1) {
