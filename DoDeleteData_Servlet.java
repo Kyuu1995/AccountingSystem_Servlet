@@ -17,8 +17,7 @@ public class DoDeleteData_Servlet extends HttpServlet {
 		response.setContentType("application/json;charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		int accountNo = Integer.parseInt(request.getParameter("accountNo"));
-		String message = "";
-		DataControl dc = new DataControl(accountNo, message);
+		DataControl dc = new DataControl(accountNo);
 		DataBase db = new DataBase();
 		DataControl data = db.deleteData(dc);
 		String json = "{\"message\":\"" + data.getMessage() + "\"}";

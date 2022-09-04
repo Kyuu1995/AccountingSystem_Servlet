@@ -27,9 +27,11 @@ public class DataControl implements Serializable {
 		this.username = username;
 	}
 
-	// ---- DoCheckPassword / DoShowProfile / DoReadAll ----
-	public DataControl(int user) {
-		this.user = user;
+	// ---- DoCheckPassword / DoShowProfile / DoShowUsername / DoReadAll /
+	// DoDeleteData ----
+	public DataControl(int number) {
+		this.user = number;
+		this.accountNo = number;
 	}
 
 	// ---- DoLogin ----
@@ -48,9 +50,8 @@ public class DataControl implements Serializable {
 	}
 
 	// ---- DoUpdateProfile ----
-	public DataControl(int user, String password, String nickname, String email, String gender) {
+	public DataControl(int user, String nickname, String email, String gender) {
 		this.user = user;
-		this.password = password;
 		this.nickname = nickname;
 		this.email = email;
 		this.gender = gender;
@@ -60,6 +61,12 @@ public class DataControl implements Serializable {
 	public DataControl(String type, int user) {
 		this.type = type;
 		this.user = user;
+	}
+	
+	// ---- DoUpdatePassword ----
+	public DataControl(int user, String password) {
+		this.user = user;
+		this.password = password;
 	}
 
 	// ---- DoReadThisMonth ----
@@ -104,17 +111,10 @@ public class DataControl implements Serializable {
 		this.notes = notes;
 	}
 
-	// ---- DoDeleteData ----
-	public DataControl(int accountNo, String message) {
-		this.accountNo = accountNo;
-		this.message = message;
-	}
-
 	// ---- DoGetItemNo ----
 	public DataControl(String type, String item, String message) {
 		this.type = type;
 		this.item = item;
-		this.message = message;
 	}
 
 	// ---- Username ----

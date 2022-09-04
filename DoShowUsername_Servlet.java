@@ -6,8 +6,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/doShowProfile")
-public class DoShowProfile_Servlet extends HttpServlet {
+@WebServlet("/doShowUsername")
+public class DoShowUsername_Servlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -18,9 +18,8 @@ public class DoShowProfile_Servlet extends HttpServlet {
 		int user = Integer.parseInt(request.getParameter("user"));
 		DataControl dc = new DataControl(user);
 		DataBase db = new DataBase();
-		DataControl data = db.showProfile(dc);
-		String json = "{\"nickname\":\"" + data.getNickname() + "\",\"email\":\"" + data.getEmail() + "\",\"gender\":\""
-				+ data.getGender() + "\"}";
+		DataControl data = db.showUsername(dc);
+		String json = "{\"username\":\"" + data.getUsername() + "\"}";
 		out.print(json);
 	}
 

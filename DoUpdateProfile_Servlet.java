@@ -18,11 +18,10 @@ public class DoUpdateProfile_Servlet extends HttpServlet {
 		response.setContentType("application/json;charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		int user = Integer.parseInt(request.getParameter("user"));
-		String password = request.getParameter("password");
 		String nickname = request.getParameter("nickname");
 		String email = request.getParameter("email");
 		String gender = request.getParameter("gender");
-		DataControl dc = new DataControl(user, password, nickname, email, gender);
+		DataControl dc = new DataControl(user, nickname, email, gender);
 		DataBase db = new DataBase();
 		DataControl data = db.updateProfile(dc);
 		String json = "{\"message\":\"" + data.getMessage() + "\"}";

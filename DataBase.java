@@ -85,17 +85,15 @@ public class DataBase {
 	// ---- ShowProfile ----
 	public DataControl showProfile(DataControl dc) {
 		DataControl data = new DataControl();
-		String showProfile = "select username, password, nickname, email, gender from user where user_no = ?";
+		String showProfile = "select nickname, email, gender from user where user_no = ?";
 		try {
 			PreparedStatement ps = DataConnection.getConnection().prepareStatement(showProfile);
 			ps.setInt(1, dc.getUser());
 			ResultSet rs = ps.executeQuery();
 			rs.next();
-			data.setUsername(rs.getString(1));
-			data.setPassword(rs.getString(2));
-			data.setNickname(rs.getString(3));
-			data.setEmail(rs.getString(4));
-			data.setGender(rs.getString(5));
+			data.setNickname(rs.getString(1));
+			data.setEmail(rs.getString(2));
+			data.setGender(rs.getString(3));
 		} catch (SQLException e) {
 			err.println("ShowData Error....");
 			// e.printStackTrace();
@@ -106,14 +104,47 @@ public class DataBase {
 	// ----- UpdateProfile ----
 	public DataControl updateProfile(DataControl dc) {
 		DataControl data = new DataControl();
-		String updateData = "update user set password = ?, nickname = ?, email = ?, gender = ? where user_no = ?";
+		String UpdateProfile = "update user set nickname = ?, email = ?, gender = ? where user_no = ?";
 		try {
-			PreparedStatement ps = DataConnection.getConnection().prepareStatement(updateData);
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(UpdateProfile);
+			ps.setString(1, dc.getNickname());
+			ps.setString(2, dc.getEmail());
+			ps.setString(3, dc.getGender());
+			ps.setInt(4, dc.getUser());
+			ps.executeUpdate();
+			data.setMessage("修改成功....");
+		} catch (Exception e) {
+			err.println("UpdateProfile Error....");
+			// e.printStackTrace();
+		}
+		return data;
+	}
+
+	// ---- ShowUsername ----
+	public DataControl showUsername(DataControl dc) {
+		DataControl data = new DataControl();
+		String showUsername = "select username from user where user_no = ?";
+		try {
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(showUsername);
+			ps.setInt(1, dc.getUser());
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			data.setUsername(rs.getString(1));
+		} catch (SQLException e) {
+			err.println("ShowData Error....");
+			// e.printStackTrace();
+		}
+		return data;
+	}
+
+	// ----- UpdatePassword ----
+	public DataControl updatePassword(DataControl dc) {
+		DataControl data = new DataControl();
+		String updatePassword = "update user set password = ? where user_no = ?";
+		try {
+			PreparedStatement ps = DataConnection.getConnection().prepareStatement(updatePassword);
 			ps.setString(1, dc.getPassword());
-			ps.setString(2, dc.getNickname());
-			ps.setString(3, dc.getEmail());
-			ps.setString(4, dc.getGender());
-			ps.setInt(5, dc.getUser());
+			ps.setInt(2, dc.getUser());
 			ps.executeUpdate();
 			data.setMessage("修改成功....");
 		} catch (Exception e) {
